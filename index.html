@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Gage's Wish List · For Grandma</title><style id="css">:root {
+  /* Retail product-listing layout: dark top bar, light gray sub bar, sidebar of categories, clean card grid. */
+  --bar: #1b2430;
+  --bar-2: #26313f;
+  --sub: #eef0f2;
+  --text: #0f1111;
+  --gray: #565959;
+  --line: #d5d9d9;
+  --accent: #f7c948;
+  --accent-edge: #e0b02f;
+  --accent-2: #f39c35;
+  --link: #0a6c86;
+  --font: Arial, Helvetica, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #ffffff; color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.4; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--link); }
+
+.top { background: var(--bar); color: #fff; }
+.top-in { display: flex; align-items: center; gap: 16px; padding: 10px 16px; max-width: 1400px; margin: 0 auto; }
+.brand { font-size: 20px; font-weight: 700; white-space: nowrap; letter-spacing: -.2px; }
+.search { flex: 1; display: flex; min-width: 0; }
+.search input { flex: 1; min-width: 0; border: 0; border-radius: 4px 0 0 4px; padding: 9px 10px; background: #fff; color: var(--text); }
+.search input:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 0; }
+.search span { background: var(--accent-2); color: var(--text); border-radius: 0 4px 4px 0; padding: 9px 12px; font-weight: 700; }
+.top .btn-add { white-space: nowrap; }
+
+.sub { background: var(--sub); border-bottom: 1px solid var(--line); }
+.sub-in { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 16px; max-width: 1400px; margin: 0 auto; }
+.sub label { color: var(--gray); font-size: 13px; }
+.sub select { padding: 5px 8px; border: 1px solid var(--line); border-radius: 4px; background: #fff; font-weight: 700; }
+.linkbtn { background: none; border: 0; padding: 4px 2px; color: var(--link); cursor: pointer; font-size: 13px; }
+.linkbtn:hover { text-decoration: underline; color: #c45500; }
+.linkbtn:focus-visible { outline: 2px solid var(--link); border-radius: 2px; }
+.status { margin-left: auto; color: var(--gray); font-size: 12px; }
+
+.wrap { display: grid; grid-template-columns: 220px 1fr; gap: 20px; max-width: 1400px; margin: 0 auto; padding: 16px; }
+aside h2 { font-size: 15px; margin: 0 0 8px; }
+.cats { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.cats button { width: 100%; text-align: left; background: none; border: 0; padding: 5px 6px; border-radius: 3px; cursor: pointer; display: flex; justify-content: space-between; gap: 8px; color: var(--text); }
+.cats button:hover { color: #c45500; }
+.cats button[aria-pressed="true"] { font-weight: 700; background: var(--sub); }
+.cats button:focus-visible { outline: 2px solid var(--link); }
+.cats .n { color: var(--gray); font-variant-numeric: tabular-nums; }
+.side-note { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--gray); font-size: 12px; }
+
+.bar2 { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+.count { font-size: 14px; }
+.count b { font-weight: 700; }
+.ctrl { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.ctrl select { padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--sub); box-shadow: 0 1px 2px rgba(15,17,17,.12); }
+.ctrl select:focus-visible, .ctrl input:focus-visible { outline: 2px solid var(--link); }
+.mob-cat { display: none; }
+.openall { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.openall small { color: var(--gray); font-size: 12px; }
+
+.group-h { font-size: 18px; margin: 18px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.group-h:first-child { margin-top: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.card { border: 1px solid var(--line); border-radius: 6px; background: #fff; display: flex; flex-direction: column; overflow: hidden; transition: box-shadow .15s; }
+.card:hover { box-shadow: 0 2px 10px rgba(15,17,17,.13); }
+.pic { aspect-ratio: 1 / 1; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #eee; padding: 12px; }
+.pic { position: relative; }
+.pic[data-pic] { cursor: pointer; }
+.pic[data-pic]:focus-visible { outline: 3px solid var(--link); outline-offset: -3px; }
+.pic.over { background: #fff8e1; }
+.pichint { position: absolute; left: 8px; right: 8px; bottom: 8px; background: rgba(255,255,255,.95); border: 1px solid var(--line); border-radius: 4px; padding: 4px 6px; font-size: 12px; color: var(--link); text-align: center; opacity: 0; transition: opacity .15s; }
+.pic[data-pic]:hover .pichint, .pic[data-pic]:focus-visible .pichint, .pic[data-pic] .ph + .pichint { opacity: 1; }
+.pic img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.ph { width: 100%; height: 100%; background: #e9ebec; color: var(--gray); display: flex; align-items: center; justify-content: center; text-align: center; padding: 14px; font-size: 13px; border-radius: 3px; }
+.info { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 5px; flex: 1; }
+.name { font-size: 15px; color: var(--text); text-decoration: none; line-height: 1.3; }
+.name:hover { color: #c45500; text-decoration: underline; }
+.meta { color: var(--gray); font-size: 12px; }
+.price { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.note { color: var(--gray); font-size: 13px; }
+.more { color: #007600; font-size: 12px; }
+.actions { margin-top: auto; padding-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.row { display: flex; gap: 12px; }
+
+.btn { display: inline-block; text-align: center; text-decoration: none; cursor: pointer; border-radius: 20px; padding: 7px 14px; border: 1px solid var(--line); background: #fff; color: var(--text); font-size: 13px; }
+.btn:hover { background: #f7f8f8; }
+.btn:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.btn.primary { background: var(--accent); border-color: var(--accent-edge); }
+.btn.primary:hover { background: #f0be32; }
+.btn.secondary { background: var(--accent-2); border-color: #d9852a; }
+.btn.secondary:hover { background: #ea8f27; }
+.empty { padding: 40px 0; color: var(--gray); }
+
+.modal-bg { position: fixed; inset: 0; background: rgba(15,17,17,.45); display: flex; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; z-index: 20; }
+.modal { background: #fff; border-radius: 8px; width: 100%; max-width: 520px; border: 1px solid var(--line); }
+.modal h2 { font-size: 18px; margin: 0; padding: 14px 18px; border-bottom: 1px solid var(--line); background: var(--sub); border-radius: 8px 8px 0 0; }
+.modal form, .modal .mbody { padding: 16px 18px; display: grid; gap: 12px; }
+.field { display: grid; gap: 4px; }
+.field label { font-weight: 700; font-size: 13px; }
+.field input, .field select, .field textarea { border: 1px solid #a6a6a6; border-radius: 4px; padding: 7px 9px; background: #fff; }
+.field input:focus-visible, .field textarea:focus-visible, .field select:focus-visible { outline: 2px solid var(--link); border-color: var(--link); }
+.field small { color: var(--gray); font-size: 12px; }
+.check { display: flex; align-items: center; gap: 8px; }
+.mfoot { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }
+.err { color: #b12704; font-size: 12px; }
+
+@media (max-width: 760px) {
+  .wrap { grid-template-columns: 1fr; }
+  aside { display: none; }
+  .mob-cat { display: flex; }
+  .top-in { flex-wrap: wrap; }
+  .search { order: 3; flex-basis: 100%; }
+  .openall { margin-left: 0; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+
+.dev { display: none !important; }
+body.devmode .dev { display: inline-block !important; }
+body.devmode #importbtn[hidden] { display: none !important; }
+.top-link { color: #fff; font-size: 13px; }
+.top-link:hover { color: var(--accent); }
+.btn-cart { background: var(--bar-2); color: #fff; border-color: #3a4656; white-space: nowrap; }
+.btn-cart:hover, .btn-cart.on { background: #33404f; color: #fff; }
+.btn-cart.on { outline: 2px solid var(--accent); }
+#cartn { display: inline-block; min-width: 20px; padding: 0 6px; margin-left: 4px; border-radius: 10px; background: var(--accent-2); color: var(--text); font-weight: 700; }
+.btn.added { background: #fff; border-color: #c45500; color: #c45500; }
+.btn.added:hover { background: #fff4ec; }
+
+.pricebox { display: flex; align-items: center; gap: 8px; }
+.pct { background: #cc0c39; color: #fff; font-weight: 700; font-size: 13px; padding: 3px 6px; border-radius: 3px; }
+.price.sale { color: #cc0c39; }
+.was { color: var(--gray); font-size: 13px; }
+.ends { color: #cc0c39; font-size: 12px; font-weight: 700; }
+/* Dark mode */
+body.dark { --sub: #1f2630; --text: #e6e8ea; --gray: #a5abb1; --line: #39424d; --link: #5cc3e0; color-scheme: dark; background: #12171d; color: var(--text); }
+body.dark .top { background: #0b0f14; }
+body.dark .search input, body.dark .sub select, body.dark .field input, body.dark .field select, body.dark .field textarea { background: #1a2129; color: var(--text); border-color: var(--line); }
+body.dark .card, body.dark .modal { background: #1a2129; }
+body.dark .pic { background: #fff; border-bottom-color: var(--line); }
+body.dark .ph { background: #2a323c; }
+body.dark .btn { background: #232b35; color: var(--text); }
+body.dark .btn:hover { background: #2c3541; }
+body.dark .btn.primary, body.dark .btn.secondary { color: #0f1111; }
+body.dark .btn.primary { background: var(--accent); }
+body.dark .btn.primary:hover { background: #f0be32; }
+body.dark .btn.secondary { background: var(--accent-2); }
+body.dark .btn.secondary:hover { background: #ea8f27; }
+body.dark .btn.added { background: #232b35; border-color: #f39c35; color: #f39c35; }
+body.dark .btn-cart { background: var(--bar-2); color: #fff; }
+body.dark .linkbtn:hover, body.dark .cats button:hover, body.dark .name:hover { color: #f39c35; }
+body.dark .more { color: #6fcf73; }
+body.dark .price.sale, body.dark .ends { color: #ff6b81; }
+body.dark .err { color: #ff8a70; }
+body.dark .pichint { background: rgba(26,33,41,.95); }
+body.dark .pic.over { background: #3a3320; }
+</style></head><body><div id="root"></div><script id="state" type="application/json">{"savedAt": 1794127845904, "key": "grandma", "title": "Gage's Wish List · For Grandma", "lists": [{"id": "xg", "name": "Christmas · For Grandma", "items": [{"id": "xg-1", "added": 1, "name": "Sony a6000 + 16–50 mm lens, used or Renewed", "link": "https://www.amazon.com/s?k=Sony+a6000+16-50mm+used", "price": "400–550", "image": "images/789a104767ed5c4b3b3198934f896b08.jpg", "category": "Camera", "note": "Ready to shoot out of the box, with easy Amazon returns. A camera listed \"body only\" has no lens and can't take pictures until you add one. KEH and MPB check and grade every used camera and add a warranty.", "multi": false}, {"id": "xg-2", "added": 2, "name": "Sony a6000 body + used 16–50 mm lens from KEH", "link": "https://www.keh.com/shop/cameras/digital-cameras/mirrorless/sony-e-mount_24-mp.html", "price": "460–500 total", "image": "images/0165f3f38f3ce099c5e94cd311d869ac.jpg", "category": "Camera", "note": "Graded used gear with a 180-day warranty. Buy the body and the lens.", "multi": false}, {"id": "xg-3", "added": 3, "name": "Sony a6000 from MPB (body or kit)", "link": "https://www.mpb.com/en-us/search?q=sony%20a6000", "price": "330–450", "image": "images/c4ebaa67734ff909c76ec46273b92e1a.jpg", "category": "Camera", "note": "Graded used gear with a 6-month warranty.", "multi": false}, {"id": "xg-4", "added": 4, "name": "Used Sony a6000 + 16–50 mm lens on eBay", "link": "https://www.ebay.com/sch/i.html?_nkw=sony+a6000+16-50", "price": "300–400", "image": "images/0b2984f28c705bbaca2f76453c6c9542.jpg", "category": "Camera", "note": "Pick a listing with good seller ratings and the kit lens included.", "multi": false}, {"id": "xg-5", "added": 5, "name": "Sony WH-1000XM6", "link": "https://www.amazon.com/s?k=Sony+WH-1000XM6", "price": "399", "image": "images/54cc4e17816c4c071790263743f59d20.jpg", "category": "Headphones, earbuds and speaker", "note": "The best all-round pick for noise canceling and sound. \"Comfy headphones\" and \"noise-canceling headphones\" are both on the list. One great pair covers both.", "multi": false}, {"id": "xg-6", "added": 6, "name": "Bose QuietComfort Ultra (2nd Gen)", "link": "https://www.amazon.com/s?k=Bose+QuietComfort+Ultra+Headphones+2nd+Gen", "price": "449", "image": "images/5f19874e53d46fc68cde044c23c19b35.jpg", "category": "Headphones, earbuds and speaker", "note": "The most comfortable for long gaming sessions.", "multi": false}, {"id": "xg-7", "added": 7, "name": "Sony WH-1000XM5", "link": "https://www.amazon.com/s?k=Sony+WH-1000XM5", "price": "280–330", "image": "images/ad166034afe47b043f12aa3271afff2e.jpg", "category": "Headphones, earbuds and speaker", "note": "The previous model, still excellent.", "multi": false}, {"id": "xg-8", "added": 8, "name": "Soundcore Space One", "link": "https://www.amazon.com/s?k=Soundcore+Space+One", "price": "80–100", "image": "images/4f39d6f5bf9db8b55d1ee783215efe09.jpg", "category": "Headphones, earbuds and speaker", "note": "Comfortable, with solid noise canceling.", "multi": false}, {"id": "xg-9", "added": 9, "name": "Bose QuietComfort Ultra Earbuds (2nd Gen)", "link": "https://www.amazon.com/s?k=Bose+QuietComfort+Ultra+Earbuds+2nd+Gen", "price": "299", "image": "images/0265b7c0ca3279e8bd3845fff6131614.jpg", "category": "Headphones, earbuds and speaker", "note": "The strongest noise canceling in earbuds.", "multi": false}, {"id": "xg-10", "added": 10, "name": "Sony WF-1000XM5", "link": "https://www.amazon.com/s?k=Sony+WF-1000XM5", "price": "230–300", "image": "images/f4c3584f58daf1eb6be178a5fc0a9ea3.jpg", "category": "Headphones, earbuds and speaker", "note": "Great sound in a smaller case.", "multi": false}, {"id": "xg-11", "added": 11, "name": "AirPods Pro 3", "link": "https://www.amazon.com/s?k=AirPods+Pro+3", "price": "249", "image": "images/3c3c1e245147f1a9ed117328d48ac60e.jpg", "category": "Headphones, earbuds and speaker", "note": "The best choice if he uses an iPhone.", "multi": false}, {"id": "xg-12", "added": 12, "name": "Sony WF-C710N", "link": "https://www.amazon.com/s?k=Sony+WF-C710N", "price": "100–120", "image": "images/966935af06311f4ba0065481c6195b06.jpg", "category": "Headphones, earbuds and speaker", "note": "Sony noise canceling in a lighter pair.", "multi": false}, {"id": "xg-13", "added": 13, "name": "Soundcore Liberty 4 NC", "link": "https://www.amazon.com/s?k=Soundcore+Liberty+4+NC", "price": "60–80", "image": "images/73ebf1dab6ebb9b360aecd213c9a1d39.jpg", "category": "Headphones, earbuds and speaker", "note": "Strong noise canceling and long battery life.", "multi": false}, {"id": "xg-14", "added": 14, "name": "JBL Charge 6", "link": "https://www.amazon.com/s?k=JBL+Charge+6", "price": "199", "image": "images/0e5c324c460fa5a5bf212f2e9350b3d6.jpg", "category": "Headphones, earbuds and speaker", "note": "Waterproof, long battery, and it can charge a phone.", "multi": false}, {"id": "xg-15", "added": 15, "name": "JBL Flip 7", "link": "https://www.amazon.com/s?k=JBL+Flip+7", "price": "149", "image": "images/97cee7ac01c06929d0d363f6df1a7c1b.jpg", "category": "Headphones, earbuds and speaker", "note": "Smaller, and still loud.", "multi": false}, {"id": "xg-16", "added": 16, "name": "Bose SoundLink Flex (2nd Gen)", "link": "https://www.amazon.com/s?k=Bose+SoundLink+Flex+2nd+Gen", "price": "149", "image": "images/81dbb27600db42ed620b98c01d7c16c7.jpg", "category": "Headphones, earbuds and speaker", "note": "Compact with a richer sound.", "multi": false}, {"id": "xg-17", "added": 17, "name": "JBL Go 4", "link": "https://www.amazon.com/s?k=JBL+Go+4", "price": "40–50", "image": "images/c86f8c90d1c6f728f6b9deb270979fc5.jpg", "category": "Headphones, earbuds and speaker", "note": "Pocket-size and waterproof.", "multi": false}, {"id": "xg-18", "added": 18, "name": "Next Level Racing F-GT Lite", "link": "https://www.amazon.com/s?k=Next+Level+Racing+F-GT+Lite", "price": "300", "image": "images/d00d83c28a0e71289d83c10ae10cef8a.jpg", "category": "Racing and desk setup", "note": "Sturdy, folds flat, GT or Formula seating.", "multi": false}, {"id": "xg-19", "added": 19, "name": "Playseat Challenge", "link": "https://www.amazon.com/s?k=Playseat+Challenge", "price": "250", "image": "images/4f8828c5987acbfe39492b41f8ff5d20.jpg", "category": "Racing and desk setup", "note": "Folds in about 10 seconds and is very light.", "multi": false}, {"id": "xg-20", "added": 20, "name": "GTPLAYER foldable cockpit", "link": "https://www.amazon.com/s?k=GTPLAYER+foldable+sim+racing+cockpit", "price": "180–220", "image": "images/52d26118e07b1058956ddf00aab2529a.jpg", "category": "Racing and desk setup", "note": "Folds without taking the wheel off.", "multi": false}, {"id": "xg-21", "added": 21, "name": "Foldable wheel stand for the G920", "link": "https://www.amazon.com/s?k=foldable+racing+wheel+stand+Logitech+G920", "price": "90–130", "image": "images/b7ddcf19870999c6832f6f3b2cf4b21c.jpg", "category": "Racing and desk setup", "note": "Holds the wheel and pedals; use any chair.", "multi": false}, {"id": "xg-22", "added": 22, "name": "Divoom Pixoo-64 II", "link": "https://divoom.com/collections/smart-pixel-displays", "price": "130", "image": "images/05284ceec5bf453ebbf87ceeba425d50.jpg", "category": "Racing and desk setup", "note": "A 64×64 pixel-art screen with clock and weather.", "multi": false}, {"id": "xg-23", "added": 23, "name": "Divoom Pixoo-Max", "link": "https://divoom.com/collections/smart-pixel-displays", "price": "100", "image": "images/39474d7d1ee7f34a9f962175e5fd2c8d.jpg", "category": "Racing and desk setup", "note": "A smaller 32×32 version.", "multi": false}, {"id": "xg-24", "added": 24, "name": "Divoom Pixoo (16×16)", "link": "https://divoom.com/collections/smart-pixel-displays", "price": "70", "image": "images/b29b729b11b007596fc53e3e406219f9.jpg", "category": "Racing and desk setup", "note": "The smallest size.", "multi": false}, {"id": "xg-25", "added": 25, "name": "Pixel art LED display", "link": "https://www.amazon.com/s?k=pixel+art+LED+display+app", "price": "30–50", "image": "images/263fba58bbf16cdb4bd6979823e85998.jpg", "category": "Racing and desk setup", "note": "A small app-controlled pixel screen.", "multi": false}, {"id": "xg-26", "added": 26, "name": "Divoom Times Gate", "link": "https://divoom.com/collections/smart-pixel-displays", "price": "120", "image": "images/284fa862abd958008c78a08a52c3e39c.jpg", "category": "Racing and desk setup", "note": "Five mini screens for pixel art, a clock and widgets.", "multi": false}, {"id": "xg-27", "added": 27, "name": "Divoom Times Frame", "link": "https://divoom.com/collections/smart-pixel-displays", "price": "180", "image": "images/6db4a606bd9042001d4f8b1845648c07.jpg", "category": "Racing and desk setup", "note": "A floating smart desk display for photos and widgets.", "multi": false}, {"id": "xg-28", "added": 28, "name": "Divoom Ditoo-Pro", "link": "https://divoom.com/collections/all", "price": "80", "image": "images/8b4f99f6f9d58cde79e93858bed998ee.jpg", "category": "Racing and desk setup", "note": "A retro pixel-art speaker that doubles as a display.", "multi": false}, {"id": "xg-29", "added": 29, "name": "Pixel art LED desk lamp", "link": "https://www.amazon.com/s?k=pixel+art+LED+desk+lamp", "price": "20–35", "image": "images/5cf7179f1bac594d4354de96404e3655.jpg", "category": "Racing and desk setup", "note": "A small glowing pixel lamp.", "multi": false}, {"id": "xg-30", "added": 30, "name": "Moment lens + Moment case", "link": "https://www.shopmoment.com/", "price": "120 + 50 case", "image": "images/b142d4c09ee58d530bb206131d36b532.jpg", "category": "Racing and desk setup", "note": "Needs the Moment case that fits his phone model.", "multi": false}, {"id": "xg-31", "added": 31, "name": "Xenvo Pro lens kit", "link": "https://www.amazon.com/s?k=Xenvo+Pro+lens+kit", "price": "40", "image": "images/d6e4182fc7fae7622dfa2e754fc7aae0.jpg", "category": "Racing and desk setup", "note": "Clip-on wide and macro lenses that fit any phone.", "multi": false}, {"id": "xg-32", "added": 32, "name": "Apexel clip-on lens kit", "link": "https://www.amazon.com/s?k=Apexel+phone+camera+lens+kit", "price": "30–60", "image": "images/57eb7f7e8c49f7bd1808ce7bbbaf4ce9.jpg", "category": "Racing and desk setup", "note": "Several lenses in one kit.", "multi": false}, {"id": "xg-33", "added": 33, "name": "CanaKit Raspberry Pi 5 Starter Kit", "link": "https://www.amazon.com/s?k=CanaKit+Raspberry+Pi+5+Starter+Kit", "price": "150–170", "image": "images/0612f7c510b3200d7d30130a13952d8e.jpg", "category": "Coding and desk tech", "note": "Board, case, fan, power supply and a microSD card. Ready to go. A tiny computer that's great for robot builds and coding projects, like the AI robot.", "multi": false}, {"id": "xg-34", "added": 34, "name": "Raspberry Pi 500", "link": "https://www.amazon.com/s?k=Raspberry+Pi+500", "price": "90–120", "image": "images/2e2397b7d8e70ba36d907b33b53178ae.jpg", "category": "Coding and desk tech", "note": "The Pi built into a keyboard. Plug it into a monitor and go.", "multi": false}, {"id": "xg-35", "added": 35, "name": "Freenove robot car kit for Raspberry Pi", "link": "https://www.amazon.com/s?k=Freenove+4WD+smart+car+kit+Raspberry+Pi", "price": "80–110", "image": "images/2b68986904234271af5ab1fc86f8a89c.jpg", "category": "Coding and desk tech", "note": "Build and code a camera robot car (Raspberry Pi sold separately).", "multi": false}, {"id": "xg-36", "added": 36, "name": "Raspberry Pi Zero 2 W starter kit", "link": "https://www.amazon.com/s?k=Raspberry+Pi+Zero+2+W+starter+kit", "price": "25–40", "image": "images/542200ec88ce3b5eefaa5cd5019f0e37.jpg", "category": "Coding and desk tech", "note": "A tiny Pi with case, power and cables.", "multi": false}, {"id": "xg-37", "added": 37, "name": "BenQ ScreenBar", "link": "https://www.amazon.com/s?k=BenQ+ScreenBar", "price": "110", "image": "images/f4b59293dd6301f3871051520c16066b.jpg", "category": "Coding and desk tech", "note": "Lights the desk without glare on the screen.", "multi": false}, {"id": "xg-38", "added": 38, "name": "BenQ ScreenBar Halo", "link": "https://www.amazon.com/s?k=BenQ+ScreenBar+Halo", "price": "180", "image": "images/75a3ec603237a4173b28276f68b3eb19.jpg", "category": "Coding and desk tech", "note": "Wireless remote and a back glow.", "multi": false}, {"id": "xg-39", "added": 39, "name": "Quntis monitor light bar", "link": "https://www.amazon.com/s?k=Quntis+monitor+light+bar", "price": "40", "image": "images/5721f1279021e9a91c4c02ed3e528d2c.jpg", "category": "Coding and desk tech", "note": "A simple, reliable choice.", "multi": false}, {"id": "xg-40", "added": 40, "name": "Shure MV7+", "link": "https://www.amazon.com/s?k=Shure+MV7+", "price": "250–280", "image": "images/a2af4013298187f2e640b10811e4bb5a.jpg", "category": "Coding and desk tech", "note": "Podcast-quality USB and XLR mic.", "multi": false}, {"id": "xg-41", "added": 41, "name": "Blue Yeti", "link": "https://www.amazon.com/s?k=Logitech+Blue+Yeti+microphone", "price": "100–130", "image": "images/8a078a27a0f54947e4019e5553f072cb.jpg", "category": "Coding and desk tech", "note": "A popular USB mic for streaming and calls.", "multi": false}, {"id": "xg-42", "added": 42, "name": "HyperX QuadCast 2", "link": "https://www.amazon.com/s?k=HyperX+QuadCast+2", "price": "100–140", "image": "images/7977b9bca9dec986b876ce8151b741a0.jpg", "category": "Coding and desk tech", "note": "USB gaming mic with lighting and a mute tap.", "multi": false}, {"id": "xg-43", "added": 43, "name": "LEGO Technic Ferrari F1 Car (42207)", "link": "https://www.lego.com/en-us/search?q=42207", "price": "200–230", "image": "images/3c1b774bfcf38a5a74bc39218af6ffea.jpg", "category": "Lego", "note": "1,362 pieces. The Ferrari and Red Bull F1 sets count as Technic Lego, car Lego and F1 all at once.", "multi": true}, {"id": "xg-44", "added": 44, "name": "LEGO Technic Oracle Red Bull Racing F1 Car", "link": "https://www.lego.com/en-us/search?q=red bull", "price": "200–230", "image": "images/57295bb7f931cbd0a2efe8ff4abbc55a.jpg", "category": "Lego", "note": "A large Technic Red Bull car.", "multi": true}, {"id": "xg-45", "added": 45, "name": "LEGO Technic Porsche 911 GT3 R REXY (42224)", "link": "https://www.lego.com/en-us/search?q=42224", "price": "149.99", "image": "images/4394066c9957dee93b4e0adedbf76aac.jpg", "category": "Lego", "note": "1,313 pieces.", "multi": true}, {"id": "xg-46", "added": 46, "name": "LEGO Technic 1966 Ford GT40 MKII Race Car (42223)", "link": "https://www.lego.com/en-us/search?q=42223", "price": "74.99", "image": "images/68a26a1d34877f51376b8f6738f2bfe0.jpg", "category": "Lego", "note": "793 pieces.", "multi": true}, {"id": "xg-47", "added": 47, "name": "LEGO Technic Ferrari Daytona SP3 (42143)", "link": "https://www.lego.com/en-us/search?q=42143", "price": "400–450", "image": "images/43749c2076f1fc2e755079b91b74f05e.jpg", "category": "Lego", "note": "3,778 pieces.", "multi": false}, {"id": "xg-48", "added": 48, "name": "LEGO Technic Batmobile Tumbler (42239)", "link": "https://www.lego.com/en-us/search?q=42239", "price": "189.99", "image": "images/6189a2bd9dcb4f4dc09ecc54ecf20979.jpg", "category": "Lego", "note": "719 pieces.", "multi": false}, {"id": "xg-49", "added": 49, "name": "LEGO Technic Fast & Furious Dodge Charger R/T (42231)", "link": "https://www.lego.com/en-us/search?q=42231", "price": "60–70", "image": "images/c1b94f7424c8b31a5406ffc990f0e593.jpg", "category": "Lego", "note": "A Fast & Furious Technic car.", "multi": false}, {"id": "xg-50", "added": 50, "name": "Fallout Nuka-Cola mini fridge", "link": "https://www.amazon.com/s?k=Nuka+Cola+mini+fridge+Fallout", "price": "90–150", "image": "images/20412261a300c3d5fd7759b6a85799c4.jpg", "category": "Fallout and F1", "note": "A small drink fridge styled like a Nuka-Cola machine.", "multi": false}, {"id": "xg-51", "added": 51, "name": "Fallout Nuka-Cola cooler", "link": "https://www.amazon.com/s?k=Nuka+Cola+cooler", "price": "80–130", "image": "images/d64d8968b629ca261a4197b5b25ee32c.jpg", "category": "Fallout and F1", "note": "A retro-style cooler.", "multi": false}, {"id": "xg-52", "added": 52, "name": "Nuka-Cola can cooler sleeve", "link": "https://www.amazon.com/s?k=Nuka+Cola+can+cooler", "price": "10–15", "image": "images/a9e711b20a2b6f1061c8c3e61733a546.jpg", "category": "Fallout and F1", "note": "An insulated sleeve that keeps a can cold.", "multi": false}, {"id": "xg-53", "added": 53, "name": "Scuderia Ferrari team jacket", "link": "https://www.amazon.com/s?k=Scuderia+Ferrari+team+jacket+official", "price": "120–200", "image": "images/1ca1673a803823e9d2f7ab68e3239bea.jpg", "category": "Fallout and F1", "note": "Official Ferrari team jacket.", "multi": false}, {"id": "xg-54", "added": 54, "name": "Oracle Red Bull Racing team jacket", "link": "https://www.amazon.com/s?k=Red+Bull+Racing+team+jacket+official", "price": "120–200", "image": "images/d00a4aad5192a914512baf233e7598d5.jpg", "category": "Fallout and F1", "note": "Official Red Bull team jacket.", "multi": false}, {"id": "xg-55", "added": 55, "name": "Williams Racing team jacket", "link": "https://www.amazon.com/s?k=Williams+Racing+team+jacket", "price": "100–180", "image": "images/306a06e0ab40f4b989cdea128dcccc84.jpg", "category": "Fallout and F1", "note": "Official Williams team jacket.", "multi": false}, {"id": "xg-56", "added": 56, "name": "Ferrari or Red Bull fan zip hoodie", "link": "https://www.amazon.com/s?k=Ferrari+Red+Bull+F1+zip+hoodie", "price": "60–80", "image": "images/8e9900083481214796ad46e012ae6479.jpg", "category": "Fallout and F1", "note": "Official team fan gear.", "multi": false}, {"id": "xg-57", "added": 57, "name": "Ferrari F1 diecast model, 1:18 scale", "link": "https://www.amazon.com/s?k=Ferrari+F1+diecast+1:18", "price": "60–250", "image": "images/ae49f9e31f1fdca60b6d37b5c7505c89.jpg", "category": "Fallout and F1", "note": "A detailed, large display model.", "multi": false}, {"id": "xg-58", "added": 58, "name": "Red Bull F1 diecast model, 1:18 scale", "link": "https://www.amazon.com/s?k=Red+Bull+F1+diecast+1:18", "price": "60–250", "image": "images/ccf3f5bedc2f82e3d75886b9bd478679.jpg", "category": "Fallout and F1", "note": "A detailed, large display model.", "multi": false}, {"id": "xg-61", "added": 61, "name": "Mini massage gun", "link": "https://www.amazon.com/s?k=mini+massage+gun", "price": "25–40", "image": "images/ff852ff0cc24b5984eb88039655de5f9.jpg", "category": "Comfort and self care", "note": "Palm-size and quiet.", "multi": false}, {"id": "xg-62", "added": 62, "name": "Sunbeam heated throw", "link": "https://www.amazon.com/s?k=Sunbeam+heated+throw+blanket", "price": "40–60", "image": "images/5e45debd0caf9a6093d8bbfe55cacf9f.jpg", "category": "Comfort and self care", "note": "Soft fleece with heat settings and auto shut-off.", "multi": false}, {"id": "xg-63", "added": 63, "name": "Bedsure heated blanket", "link": "https://www.amazon.com/s?k=Bedsure+heated+throw+blanket", "price": "40–55", "image": "images/3f125759945d10146d027239ef6d9bc1.jpg", "category": "Comfort and self care", "note": "Flannel with several heat levels.", "multi": false}, {"id": "xg-64", "added": 64, "name": "Fleece throw blanket", "link": "https://www.amazon.com/s?k=fleece+throw+blanket", "price": "15–25", "image": "images/d7929200aad04d3fa844330e66be4ccc.jpg", "category": "Comfort and self care", "note": "Soft and warm, no cord.", "multi": false}, {"id": "xg-66", "added": 66, "name": "Dearfoams memory foam slippers", "link": "https://www.amazon.com/s?k=Dearfoams+men's+memory+foam+slippers", "price": "25–35", "image": "images/9cb262cf6de522ff47a60d8d5320d0a4.jpg", "category": "Comfort and self care", "note": "Cushioned slip-ons. Men's 9.5.", "multi": false}, {"id": "xg-67", "added": 67, "name": "Mazda MX-5 Miata 1:18 scale model", "link": "https://www.amazon.com/s?k=Mazda+MX-5+Miata+1:18+diecast", "price": "80–150", "image": "images/22346e67431160882aea5710c6604236.jpg", "category": "Miata", "note": "A large, detailed display model.", "multi": true}, {"id": "xg-68", "added": 68, "name": "Maisto Mazda MX-5 Miata 1:24 scale", "link": "https://www.amazon.com/s?k=Maisto+Mazda+MX-5+Miata+1:24", "price": "20–30", "image": "images/022441f5f4ea9d3e2f2fb696c6f7bb6b.jpg", "category": "Miata", "note": "A mid-size display model.", "multi": true}, {"id": "xg-69", "added": 69, "name": "Frigidaire retro mini fridge, 3.2 cu ft", "link": "https://www.amazon.com/s?k=Frigidaire+retro+mini+fridge+3.2+cu+ft", "price": "170–230", "image": "images/d98554e2b9097a9a3c54ff6475fcb7e5.jpg", "category": "College (University of Idaho)", "note": "Fridge with a small freezer. Check the dorm's size limit before buying.", "multi": false}, {"id": "xg-70", "added": 70, "name": "Midea mini fridge, 3.1 cu ft", "link": "https://www.amazon.com/s?k=Midea+mini+fridge+3.1+cu+ft", "price": "120–160", "image": "images/4b10503aba3080527f1630b02b40df65.jpg", "category": "College (University of Idaho)", "note": "A plain, reliable dorm fridge.", "multi": false}, {"id": "xg-71", "added": 71, "name": "Personal mini fridge (4 L)", "link": "https://www.amazon.com/s?k=mini+fridge+4+liter+6+can", "price": "35–50", "image": "images/16306f809d3f289053ce746565978e6d.jpg", "category": "College (University of Idaho)", "note": "Holds six cans; fits on a desk.", "multi": false}, {"id": "xg-72", "added": 72, "name": "3-inch memory foam topper, Twin XL", "link": "https://www.amazon.com/s?k=3+inch+memory+foam+mattress+topper+twin+xl", "price": "60–100", "image": "images/49e3efa56fbd590f13ea5610746ce0e7.jpg", "category": "College (University of Idaho)", "note": "Makes a dorm mattress far more comfortable. Most dorm beds are Twin XL.", "multi": false}, {"id": "xg-73", "added": 73, "name": "2-inch memory foam topper, Twin XL", "link": "https://www.amazon.com/s?k=2+inch+memory+foam+mattress+topper+twin+xl", "price": "30–50", "image": "images/507e9f2108276e66a1f2069c638a2e19.jpg", "category": "College (University of Idaho)", "note": "A thinner topper.", "multi": false}, {"id": "xg-76", "added": 76, "name": "Idaho Vandals hoodie", "link": "https://www.amazon.com/s?k=Idaho+Vandals+hoodie", "price": "45–70", "image": "images/e9b88f46b4fbb1d1e4bc81f653a690dc.jpg", "category": "College (University of Idaho)", "note": "Official University of Idaho gear.", "multi": true}, {"id": "xg-78", "added": 78, "name": "Pioneer DMH-W2770NEX wireless CarPlay receiver", "link": "https://www.crutchfield.com/s-search/?query=Pioneer+DMH-W2770NEX", "price": "500–600", "image": "images/a10e1ee2419a5e5e9ded88988f9b20ec.jpg", "category": "Chevy Cruze", "note": "Large touchscreen with wireless CarPlay and Android Auto. For Gage's 2014 Chevy Cruze. A new radio needs a dash kit and wiring harness for the 2011–2015 Cruze; Crutchfield includes them with install guides.", "multi": false}, {"id": "xg-79", "added": 79, "name": "Sony XAV-AX4000 wireless CarPlay receiver", "link": "https://www.crutchfield.com/s-search/?query=Sony+XAV-AX4000", "price": "450–550", "image": "images/a90e1825f0dffecc4d0313b95db9c35f.jpg", "category": "Chevy Cruze", "note": "Wireless CarPlay and Android Auto.", "multi": false}, {"id": "xg-80", "added": 80, "name": "9-inch CarPlay radio made for the 2011–2015 Cruze", "link": "https://www.amazon.com/s?k=Chevy+Cruze+2011-2015+radio+Apple+CarPlay+9+inch", "price": "120–220", "image": "images/47a5e22e7e6912cf88687f784d46b9a3.jpg", "category": "Chevy Cruze", "note": "Fits the Cruze dash without a separate kit.", "multi": false}, {"id": "xg-81", "added": 81, "name": "DOF Reality H3 motion simulator", "link": "https://www.dofreality.com/", "price": "1,500–2,500", "image": "images/1045d0ffd5812d788997c144a2d773f4.jpg", "category": "Just for fun", "note": "A full motion sim that moves with the car on screen.", "multi": false}, {"id": "xg-82", "added": 82, "name": "Next Level Racing Motion Platform V3", "link": "https://www.amazon.com/s?k=Next+Level+Racing+Motion+Platform+V3", "price": "1,000–1,500", "image": "images/635a3d4ea3614fc68571f4e0649da098.jpg", "category": "Just for fun", "note": "A motion base that a cockpit sits on.", "multi": false}, {"id": "xg-83", "added": 83, "name": "Next Level Racing Traction Plus", "link": "https://www.amazon.com/s?k=Next+Level+Racing+Traction+Plus", "price": "600–800", "image": "images/bf8475ffe7ed26d35b826e673b9a704d.jpg", "category": "Just for fun", "note": "Adds seat movement to a rig.", "multi": false}, {"id": "xg-84", "added": 84, "name": "Used red NA Miata on eBay Motors", "link": "https://www.ebay.com/sch/i.html?_nkw=mazda+miata+1990+1997+red", "price": "5,000–12,000", "image": "images/03e5f22f79cfa7e68808b610cd2b054f.jpg", "category": "Just for fun", "note": "The first-generation Miata with pop-up headlights.", "multi": false}, {"id": "xg-85", "added": 85, "name": "Used NA Miata on Autotrader", "link": "https://www.autotrader.com/cars-for-sale/mazda/mx-5-miata?endYear=1997&startYear=1990", "price": "5,000–12,000", "image": "images/f4439aa61fc64b229fbc602641f4cc9b.jpg", "category": "Just for fun", "note": "First-generation Miatas listed near and far.", "multi": false}], "next": 86}]}</script><script id="app">(function () {
+  "use strict";
+  var state = JSON.parse(document.getElementById("state").textContent);
+  var LS = "gage-wish-list-" + (state.key || "main");
+  var TITLE = state.title || "Gage's Wish List";
+  var pendingMerge = false;
+  try {
+    var local = JSON.parse(localStorage.getItem(LS) || "null");
+    if (local && local.lists && (local.savedAt || 0) > (state.savedAt || 0)) state = local;
+    else if (local && local.lists) {
+      var imgs = {};
+      local.lists.forEach(function (l) { l.items.forEach(function (x) { if (x.image) imgs[x.name.toLowerCase()] = x.image; }); });
+      state.lists.forEach(function (l) { l.items.forEach(function (x) {
+        if (!x.image && imgs[x.name.toLowerCase()]) { x.image = imgs[x.name.toLowerCase()]; pendingMerge = true; }
+      }); });
+    }
+  } catch (e) {}
+
+  var TOP = "Top picks";
+  var ui = { list: state.lists[0].id, q: "", cat: "all", sort: "name", group: true, cartOnly: false };
+  var dev = false, cart = [];
+  try { dev = localStorage.getItem("gage-wish-dev") === "1"; } catch (e) {}
+  var dark = false;
+  try { dark = localStorage.getItem("gage-wish-dark") === "1"; } catch (e) {}
+  document.body.classList.toggle("dark", dark);
+  try { cart = JSON.parse(localStorage.getItem(LS + "-cart") || "[]"); } catch (e) { cart = []; }
+  function saveCart() { try { localStorage.setItem(LS + "-cart", JSON.stringify(cart)); } catch (e) {} }
+  function inCart(id) { return cart.indexOf(id) !== -1; }
+  try {
+    if (localStorage.getItem(LS + "-topdone") !== "1" && cart.length) {
+      var hasTop = state.lists.some(function (l) { return l.items.some(function (x) { return x.top; }); });
+      if (!hasTop) {
+        var picked = 0;
+        state.lists.forEach(function (l) { l.items.forEach(function (x) { if (inCart(x.id)) { x.top = true; picked++; } }); });
+        if (picked) { cart = []; saveCart(); pendingMerge = true; }
+      }
+    }
+    localStorage.setItem(LS + "-topdone", "1");
+  } catch (e) {}
+  var art = null, assets = null, shared = false, timer = null;
+  var root = document.getElementById("root");
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function uid() { return Math.random().toString(36).slice(2, 10); }
+  function cur() { return state.lists.find(function (l) { return l.id === ui.list; }) || state.lists[0]; }
+  function num(t) { var m = String(t || "").replace(/,/g, "").match(/\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; }
+  function showPrice(t) { t = String(t || "").trim(); if (!t) return ""; return /^\d/.test(t) ? "$" + t : t; }
+  function safeUrl(u) { u = String(u || "").trim(); return /^https?:\/\//i.test(u) ? u : ""; }
+  function imgSrc(u) { u = String(u || "").trim(); return /^(https?:\/\/|images\/|\/_blob\/|data:image\/|blob:)/i.test(u) ? u : ""; }
+
+  function status(t) { var el = document.getElementById("status"); if (el) el.textContent = t; }
+
+  function docHTML() {
+    var css = document.getElementById("css").textContent;
+    var js = document.getElementById("app").textContent;
+    var json = JSON.stringify(state).replace(/</g, "\\u003c");
+    return "<!DOCTYPE html>\n<html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>" + esc(TITLE) + "</title><style id=\"css\">" +
+      css + "</style></head><body><div id=\"root\"></div><script id=\"state\" type=\"application/json\">" + json +
+      "<\/script><script id=\"app\">" + js + "<\/script></body></html>";
+  }
+
+  function save() {
+    state.savedAt = Date.now();
+    try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {}
+    if (!shared || !art) { status("Changes saved in this browser"); return; }
+    status("Saving…");
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      art.publish(docHTML()).then(function () { status("All changes saved"); }).catch(function (e) {
+        var msg = String((e && (e.code || e.message)) || e);
+        if (/conflict/i.test(msg)) { status("The list was updated somewhere else. Reloading the latest version."); return; }
+        shared = false;
+        status("Changes saved in this browser");
+      });
+    }, 2500);
+  }
+
+  function shell() {
+    root.innerHTML =
+      '<header class="top"><div class="top-in">' +
+        '<div class="brand">' + esc(TITLE) + '</div>' +
+        '<label class="search" for="q"><input id="q" type="search" placeholder="Search this list" aria-label="Search this list"><span aria-hidden="true">Search</span></label>' +
+        '<button class="btn btn-cart" id="cartbtn" type="button" aria-pressed="false">My list <span id="cartn">0</span></button>' +
+        '<button class="btn primary btn-add dev" id="add" type="button">New item</button>' +
+        '<button class="linkbtn top-link" id="settings" type="button">Settings</button>' +
+      '</div></header>' +
+      '<div class="sub"><div class="sub-in">' +
+        '<label for="listsel">List</label><select id="listsel"></select>' +
+        '<button class="linkbtn dev" id="newlist" type="button">New list</button>' +
+        '<button class="linkbtn dev" id="renlist" type="button">Rename</button>' +
+        '<button class="linkbtn dev" id="dellist" type="button">Delete list</button>' +
+        '<button class="linkbtn dev" id="importbtn" type="button" hidden>Import photos</button>' +
+        '<button class="linkbtn dev" id="mktop" type="button">Make My list items top picks</button>' +
+        '<span class="status" id="status" role="status"></span>' +
+      '</div></div>' +
+      '<div class="wrap"><aside><h2>Category</h2><ul class="cats" id="cats"></ul>' +
+        '<p class="side-note">Thank you for shopping for Gage. "View item" opens the store page in a new tab. "Add item" saves it to My list so you can keep track of what you plan to get.</p></aside>' +
+      '<main><div class="bar2">' +
+        '<div class="count" id="count"></div>' +
+        '<div class="ctrl mob-cat"><label for="catsel">Category</label><select id="catsel"></select></div>' +
+        '<div class="ctrl"><label for="sort">Sort by</label><select id="sort">' +
+          '<option value="name" selected>Item name: A to Z</option><option value="added">Order added</option><option value="price-asc">Price: low to high</option>' +
+          '<option value="price-desc">Price: high to low</option></select></div>' +
+        '<label class="ctrl" for="group"><input type="checkbox" id="group" checked> Group by category</label>' +
+        '<div class="openall"><button class="btn secondary" id="openall" type="button">Open all links</button>' +
+          '<small>Your browser may ask you to allow pop-ups.</small></div>' +
+      '</div><div id="items"></div></main></div><div id="modal"></div>';
+
+    document.getElementById("q").addEventListener("input", function (e) { ui.q = e.target.value; render(); });
+    document.getElementById("sort").addEventListener("change", function (e) { ui.sort = e.target.value; render(); });
+    document.getElementById("group").addEventListener("change", function (e) { ui.group = e.target.checked; render(); });
+    document.getElementById("catsel").addEventListener("change", function (e) { ui.cat = e.target.value; render(); });
+    document.getElementById("listsel").addEventListener("change", function (e) { ui.list = e.target.value; ui.cat = "all"; render(); });
+    document.getElementById("add").addEventListener("click", function () { itemForm(null); });
+    document.getElementById("newlist").addEventListener("click", function () { listForm(null); });
+    document.getElementById("renlist").addEventListener("click", function () { listForm(cur()); });
+    document.getElementById("dellist").addEventListener("click", deleteList);
+    document.getElementById("openall").addEventListener("click", openAll);
+    document.getElementById("importbtn").addEventListener("click", importPhotos);
+    document.getElementById("mktop").addEventListener("click", function () {
+      var l = cur(), mine = l.items.filter(function (x) { return inCart(x.id); });
+      if (!mine.length) { status('Press "Add item" on the items you want as top picks first.'); return; }
+      confirmBox("Make the " + mine.length + " items in My list top picks? My list will be emptied afterwards.", "Make top picks", function () {
+        mine.forEach(function (x) { x.top = true; });
+        cart = cart.filter(function (id) { return !mine.some(function (x) { return x.id === id; }); }); saveCart(); save(); render();
+      });
+    });
+    document.getElementById("settings").addEventListener("click", settingsBox);
+    document.getElementById("cartbtn").addEventListener("click", function () { ui.cartOnly = !ui.cartOnly; render(); });
+    document.getElementById("cats").addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-cat]"); if (!b) return; ui.cat = b.dataset.cat; render();
+    });
+    document.getElementById("items").addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-act]"); if (!b) return;
+      if (b.dataset.act === "cart") {
+        var id = b.dataset.id;
+        if (inCart(id)) cart = cart.filter(function (x) { return x !== id; }); else cart.push(id);
+        saveCart(); render(); return;
+      }
+      var it = cur().items.find(function (x) { return x.id === b.dataset.id; }); if (!it) return;
+      if (b.dataset.act === "edit") itemForm(it); else confirmBox("Remove “" + it.name + "” from this list?", "Remove", function () {
+        var l = cur(); l.items = l.items.filter(function (x) { return x.id !== it.id; }); save(); render();
+      });
+    });
+    root.addEventListener("error", function (e) {
+      var t = e.target;
+      if (t && t.tagName === "IMG" && t.closest(".pic")) { t.parentNode.innerHTML = '<div class="ph">' + esc(t.alt) + "</div>"; }
+    }, true);
+  }
+
+  function categories(l) {
+    var seen = [], counts = {};
+    l.items.forEach(function (it) { var c = it.category || "Other"; if (!(c in counts)) { seen.push(c); counts[c] = 0; } counts[c]++; });
+    seen.sort(function (a, b) { return a.localeCompare(b); });
+    var out = seen.map(function (c) { return { name: c, n: counts[c] }; });
+    var nt = l.items.filter(function (x) { return x.top; }).length;
+    if (nt) out.unshift({ name: TOP, n: nt });
+    return out;
+  }
+
+  function visible() {
+    var l = cur(), q = ui.q.trim().toLowerCase();
+    var arr = l.items.filter(function (it) {
+      if (ui.cartOnly && !inCart(it.id)) return false;
+      if (ui.cat === TOP) { if (!it.top) return false; }
+      else if (ui.cat !== "all" && (it.category || "Other") !== ui.cat) return false;
+      if (!q) return true;
+      return [it.name, it.category, it.note].join(" ").toLowerCase().indexOf(q) !== -1;
+    });
+    var by = {
+      added: function (a, b) { return a.added - b.added; },
+      name: function (a, b) { return a.name.localeCompare(b.name); },
+      "price-asc": function (a, b) { var x = num(a.price), y = num(b.price); if (x == null) return 1; if (y == null) return -1; return x - y; },
+      "price-desc": function (a, b) { var x = num(a.price), y = num(b.price); if (x == null) return 1; if (y == null) return -1; return y - x; }
+    };
+    return arr.sort(by[ui.sort]);
+  }
+
+  function card(it) {
+    var link = safeUrl(it.link), src = imgSrc(it.image);
+    var pic = src ? '<img src="' + esc(src) + '" alt="' + esc(it.name) + '" loading="lazy">' : '<div class="ph">' + esc(it.name) + "</div>";
+    var drop = assets && dev ? ' data-pic="' + it.id + '" tabindex="0" role="button" aria-label="Add or change the photo for ' + esc(it.name) + '. Paste, drop or press Enter to choose a file."' : "";
+    var hint = assets && dev ? '<span class="pichint">' + (src ? "Change photo" : "Paste, drop or click to add a photo") + "</span>" : "";
+    var title = link ? '<a class="name" href="' + esc(link) + '" target="_blank" rel="noopener">' + esc(it.name) + "</a>" : '<span class="name">' + esc(it.name) + "</span>";
+    return '<article class="card"><div class="pic"' + drop + ">" + pic + hint + '</div><div class="info">' + title +
+      '<div class="meta">' + esc(it.category || "Other") + "</div>" +
+      (it.was ? '<div class="pricebox"><span class="pct">-' + esc(it.pct) + '%</span> <span class="price sale">' + esc(showPrice(it.price)) + '</span></div><div class="was">List price: <s>' + esc(showPrice(it.was)) + '</s></div><div class="ends">' + (it.ends ? "Sale ends " + esc(it.ends) : "Sale end date not listed") + "</div>"
+        : it.price ? '<div class="price">' + esc(showPrice(it.price)) + "</div>" : "") +
+      (it.note ? '<div class="note">' + esc(it.note) + "</div>" : "") +
+      (it.multi ? '<div class="more">Happy to have more than one</div>' : "") +
+      '<div class="actions">' + (link ? '<a class="btn primary" href="' + esc(link) + '" target="_blank" rel="noopener">View item</a>' : "") +
+      '<button class="btn ' + (inCart(it.id) ? "added" : "") + '" type="button" data-act="cart" data-id="' + it.id + '" aria-pressed="' + inCart(it.id) + '">' + (inCart(it.id) ? "Remove item" : "Add item") + "</button>" +
+      (dev ? '<div class="row"><button class="linkbtn" type="button" data-act="edit" data-id="' + it.id + '">Edit</button>' +
+      '<button class="linkbtn" type="button" data-act="del" data-id="' + it.id + '">Delete</button></div>' : "") + "</div></div></article>";
+  }
+
+  function render() {
+    var l = cur();
+    document.body.classList.toggle("devmode", dev);
+    var ids = {}; l.items.forEach(function (x) { ids[x.id] = 1; });
+    var mine = cart.filter(function (x) { return ids[x]; });
+    document.getElementById("cartn").textContent = mine.length;
+    var cb = document.getElementById("cartbtn"); cb.setAttribute("aria-pressed", ui.cartOnly); cb.classList.toggle("on", ui.cartOnly);
+    document.getElementById("listsel").innerHTML = state.lists.map(function (x) {
+      return '<option value="' + x.id + '"' + (x.id === l.id ? " selected" : "") + ">" + esc(x.name) + "</option>";
+    }).join("");
+    document.getElementById("dellist").style.visibility = state.lists.length < 2 ? "hidden" : "";
+    var cats = categories(l);
+    if (ui.cat !== "all" && !cats.some(function (c) { return c.name === ui.cat; })) ui.cat = "all";
+    document.getElementById("cats").innerHTML = '<li><button type="button" data-cat="all" aria-pressed="' + (ui.cat === "all") + '"><span>All items</span><span class="n">' + l.items.length + "</span></button></li>" +
+      cats.map(function (c) { return '<li><button type="button" data-cat="' + esc(c.name) + '" aria-pressed="' + (ui.cat === c.name) + '"><span>' + esc(c.name) + '</span><span class="n">' + c.n + "</span></button></li>"; }).join("");
+    document.getElementById("catsel").innerHTML = '<option value="all">All items</option>' + cats.map(function (c) {
+      return '<option value="' + esc(c.name) + '"' + (ui.cat === c.name ? " selected" : "") + ">" + esc(c.name) + "</option>"; }).join("");
+
+    var items = visible();
+    if (ui.cartOnly) {
+      var lo = 0, hi = 0;
+      items.forEach(function (it) { var m = String(it.price || "").replace(/,/g, "").match(/\d+(\.\d+)?/g); if (m) { lo += parseFloat(m[0]); hi += parseFloat(m[m.length - 1]); } });
+      var tot = lo ? " \u00b7 Estimated total $" + Math.round(lo) + (hi > lo ? "\u2013$" + Math.round(hi) : "") : "";
+      document.getElementById("count").innerHTML = "<b>My list:</b> " + items.length + (items.length === 1 ? " item" : " items") + esc(tot) + ' <button class="linkbtn" type="button" id="backall">Back to all items</button>';
+      document.getElementById("backall").onclick = function () { ui.cartOnly = false; render(); };
+    } else
+    document.getElementById("count").innerHTML = "<b>" + items.length + "</b> " + (items.length === 1 ? "item" : "items") + " in <b>" + esc(l.name) + "</b>";
+    var box = document.getElementById("items");
+    if (!items.length) { box.innerHTML = '<p class="empty">' + (ui.cartOnly && !mine.length ? 'My list is empty. Press "Add item" on anything you plan to get.' : l.items.length ? "No items match your search." : "This list is empty.") + "</p>"; return; }
+    if (ui.group && ui.cat === "all") {
+      var order = [], groups = {};
+      items.forEach(function (it) { var c = it.category || "Other"; if (!groups[c]) { groups[c] = []; order.push(c); } groups[c].push(it); });
+      order.sort(function (a, b) { return a.localeCompare(b); });
+      var tops = items.filter(function (it) { return it.top; });
+      if (tops.length) { order.unshift(TOP); groups[TOP] = tops; }
+      box.innerHTML = order.map(function (c) { return '<h2 class="group-h">' + esc(c) + '</h2><div class="grid">' + groups[c].map(card).join("") + "</div>"; }).join("");
+    } else {
+      if (ui.cat === "all") items = items.filter(function (it) { return it.top; }).concat(items.filter(function (it) { return !it.top; }));
+      box.innerHTML = '<div class="grid">' + items.map(card).join("") + "</div>";
+    }
+  }
+
+  function openAll() {
+    var links = visible().map(function (it) { return safeUrl(it.link); }).filter(Boolean);
+    links.forEach(function (u) {
+      var a = document.createElement("a"); a.href = u; a.target = "_blank"; a.rel = "noopener";
+      document.body.appendChild(a); a.click(); a.remove();
+    });
+  }
+
+  function modal(html) {
+    var m = document.getElementById("modal");
+    m.innerHTML = '<div class="modal-bg"><div class="modal" role="dialog" aria-modal="true">' + html + "</div></div>";
+    var bg = m.firstChild;
+    bg.addEventListener("click", function (e) { if (e.target === bg || e.target.closest("[data-close]")) close(); });
+    document.addEventListener("keydown", onKey);
+    var f = bg.querySelector("input, textarea, select, button"); if (f) f.focus();
+    return bg;
+  }
+  function onKey(e) { if (e.key === "Escape") close(); }
+  function close() { document.getElementById("modal").innerHTML = ""; document.removeEventListener("keydown", onKey); }
+
+  function confirmBox(text, label, yes) {
+    var bg = modal('<h2>Please confirm</h2><div class="mbody"><p style="margin:0">' + esc(text) + '</p><div class="mfoot"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="button" id="yes">' + esc(label) + "</button></div></div>");
+    bg.querySelector("#yes").addEventListener("click", function () { close(); yes(); });
+  }
+
+  function listForm(l) {
+    var bg = modal("<h2>" + (l ? "Rename list" : "New list") + '</h2><form id="lf"><div class="field"><label for="lname">List name</label><input id="lname" required maxlength="60" value="' + esc(l ? l.name : "") + '" placeholder="Birthday"></div><div class="mfoot"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit">Save</button></div></form>');
+    bg.querySelector("#lf").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = bg.querySelector("#lname").value.trim(); if (!name) return;
+      if (l) l.name = name; else { var n = { id: uid(), name: name, items: [], next: 1 }; state.lists.push(n); ui.list = n.id; ui.cat = "all"; }
+      close(); save(); render();
+    });
+  }
+
+  function deleteList() {
+    if (state.lists.length < 2) return;
+    var l = cur();
+    confirmBox("Delete the list “" + l.name + "” and its " + l.items.length + " items?", "Delete list", function () {
+      state.lists = state.lists.filter(function (x) { return x.id !== l.id; }); ui.list = state.lists[0].id; ui.cat = "all"; save(); render();
+    });
+  }
+
+  function itemForm(it) {
+    var l = cur(), cats = categories(l).map(function (c) { return c.name; });
+    var upload = assets ? '<div class="field"><label for="fphoto">Or upload a photo</label><input id="fphoto" type="file" accept="image/*"><small>Save the picture from the store page, then choose it here.</small></div>' : "";
+    var bg = modal("<h2>" + (it ? "Edit item" : "Add item") + '</h2><form id="itf" novalidate>' +
+      '<div class="field"><label for="fname">Item name</label><input id="fname" required maxlength="140" value="' + esc(it ? it.name : "") + '"></div>' +
+      '<div class="field"><label for="flink">Link</label><input id="flink" type="url" placeholder="https://" value="' + esc(it ? it.link : "") + '"></div>' +
+      '<div class="field"><label for="fprice">Price</label><input id="fprice" inputmode="decimal" placeholder="49.99" value="' + esc(it ? it.price : "") + '"></div>' +
+      '<div class="field"><label for="fimg">Image URL</label><input id="fimg" type="url" placeholder="https://" value="' + esc(it && !/^\/_blob\//.test(it.image || "") ? it.image : "") + '"><small>Pictures linked from other websites may not appear on this page. Uploading a photo always works.</small></div>' +
+      upload +
+      '<div class="field"><label for="fcat">Category</label><input id="fcat" list="catlist" maxlength="60" value="' + esc(it ? it.category : (ui.cat !== "all" ? ui.cat : "")) + '"><datalist id="catlist">' + cats.map(function (c) { return '<option value="' + esc(c) + '">'; }).join("") + "</datalist></div>" +
+      '<div class="field"><label for="fnote">Note (optional)</label><textarea id="fnote" rows="2" maxlength="300">' + esc(it ? it.note : "") + "</textarea></div>" +
+      '<label class="check" for="fmulti"><input id="fmulti" type="checkbox"' + (it && it.multi ? " checked" : "") + "> Happy to have more than one</label>" +
+      '<label class="check" for="ftop"><input id="ftop" type="checkbox"' + (it && it.top ? " checked" : "") + "> Show in Top picks</label>" +
+      '<div class="err" id="ferr" role="alert"></div>' +
+      '<div class="mfoot"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit" id="fsave">Save item</button></div></form>');
+    var uploaded = it && /^\/_blob\//.test(it.image || "") ? it.image : "";
+    var fp = bg.querySelector("#fphoto");
+    if (fp) fp.addEventListener("change", function () {
+      var file = fp.files[0]; if (!file) return;
+      var err = bg.querySelector("#ferr"), btn = bg.querySelector("#fsave");
+      err.textContent = "Uploading photo…"; btn.disabled = true;
+      assets.upload(file).then(function (r) { uploaded = "/_blob/" + r.id; err.textContent = "Photo added."; })
+        .catch(function () { err.textContent = "The photo didn't upload. Try a smaller JPG or PNG."; })
+        .then(function () { btn.disabled = false; });
+    });
+    bg.querySelector("#itf").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = bg.querySelector("#fname").value.trim();
+      var link = bg.querySelector("#flink").value.trim();
+      var err = bg.querySelector("#ferr");
+      if (!name) { err.textContent = "Add the item's name."; bg.querySelector("#fname").focus(); return; }
+      if (link && !safeUrl(link)) { err.textContent = "The link needs to start with https://"; bg.querySelector("#flink").focus(); return; }
+      var img = bg.querySelector("#fimg").value.trim();
+      var data = {
+        name: name, link: link, price: bg.querySelector("#fprice").value.trim().replace(/^\$/, ""),
+        image: uploaded || img, category: bg.querySelector("#fcat").value.trim() || "Other",
+        note: bg.querySelector("#fnote").value.trim(), multi: bg.querySelector("#fmulti").checked, top: bg.querySelector("#ftop").checked
+      };
+      var dupe = null;
+      state.lists.forEach(function (ol) { ol.items.forEach(function (x) {
+        if (x === it) return;
+        if (x.name.toLowerCase() === data.name.toLowerCase() || (data.link && x.link === data.link)) dupe = dupe || ol.name;
+      }); });
+      if (dupe && !bg.dataset.ok) { bg.dataset.ok = "1"; err.textContent = "This item is already on \u201c" + dupe + "\u201d. Press Save item again to add it anyway."; return; }
+      if (it) Object.assign(it, data);
+      else { data.id = uid(); data.added = l.next || (l.items.length + 1); l.next = data.added + 1; l.items.push(data); }
+      close(); save(); render();
+    });
+  }
+
+  function settingsBox() {
+    var bg = modal('<h2>Settings</h2><div class="mbody"><label class="check" for="darkchk"><input id="darkchk" type="checkbox"' + (dark ? " checked" : "") + '> Dark mode</label><label class="check" for="devchk"><input id="devchk" type="checkbox"' + (dev ? " checked" : "") + '> Developer options</label><p class="note" style="margin:0">Shows tools for adding, editing and removing items, managing lists, and adding photos. Only changes this browser.</p><div class="mfoot"><button class="btn primary" type="button" data-close>Done</button></div></div>');
+    bg.querySelector("#darkchk").addEventListener("change", function (e) {
+      dark = e.target.checked; try { localStorage.setItem("gage-wish-dark", dark ? "1" : "0"); } catch (err) {} document.body.classList.toggle("dark", dark);
+    });
+    bg.querySelector("#devchk").addEventListener("change", function (e) {
+      dev = e.target.checked; try { localStorage.setItem("gage-wish-dev", dev ? "1" : "0"); } catch (err) {} render();
+    });
+  }
+  function toBlob(dataUrl) {
+    var parts = dataUrl.split(","), mime = (parts[0].match(/data:([^;]+)/) || [])[1] || "image/jpeg";
+    var bin = atob(parts[1]), arr = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: mime });
+  }
+  function importPhotos() {
+    if (!assets) return;
+    var bg = modal('<h2>Import photos</h2><div class="mbody"><p style="margin:0">Copy the photo data, then press Ctrl+V (or Cmd+V) here.</p><p class="err" id="imsg" role="status"></p><div class="mfoot"><button class="btn" type="button" data-close>Close</button></div></div>');
+    var msg = bg.querySelector("#imsg"), busy = false;
+    function onMsg(e) {
+      if (busy || !document.getElementById("imsg") || !e.data || typeof e.data.gagePhotos !== "object") return;
+      run(e.data.gagePhotos);
+    }
+    window.addEventListener("message", onMsg);
+    function onPaste(e) {
+      if (busy) return;
+      var text = e.clipboardData && e.clipboardData.getData("text");
+      var map; try { map = JSON.parse(text); } catch (err) { msg.textContent = "That doesn't look like photo data. Copy it again and paste here."; return; }
+      e.preventDefault();
+      run(map);
+    }
+    function run(map) {
+      var todo = [];
+      state.lists.forEach(function (l) { l.items.forEach(function (it) {
+        var d = map[it.name.toLowerCase()];
+        if (d && !it.image && /^data:image\//.test(d)) todo.push([it, d]);
+      }); });
+      if (!todo.length) { msg.textContent = "No new photos matched items on this page."; return; }
+      busy = true; var done = 0, failed = 0;
+      (function next() {
+        if (!todo.length) {
+          busy = false; document.removeEventListener("paste", onPaste); window.removeEventListener("message", onMsg);
+          msg.textContent = "Added " + done + " photos" + (failed ? " (" + failed + " didn't upload)" : "") + ". Saving\u2026";
+          render(); save(); return;
+        }
+        var job = todo.shift();
+        msg.textContent = "Adding photos: " + done + " done, " + todo.length + " to go\u2026";
+        assets.upload(toBlob(job[1])).then(function (r) { job[0].image = "/_blob/" + r.id; done++; })
+          .catch(function () { failed++; }).then(next);
+      })();
+    }
+    document.addEventListener("paste", onPaste);
+  }
+  function setPhoto(id, file) {
+    if (!assets || !file || !/^image\//.test(file.type)) return;
+    var it = null; state.lists.forEach(function (l) { l.items.forEach(function (x) { if (x.id === id) it = x; }); });
+    if (!it) return;
+    status("Uploading photo\u2026");
+    assets.upload(file).then(function (r) { it.image = "/_blob/" + r.id; render(); save(); })
+      .catch(function () { status("That photo didn't upload. Try a JPG or PNG."); });
+  }
+  var picker = document.createElement("input"); picker.type = "file"; picker.accept = "image/*"; picker.hidden = true; picker.id = "picker";
+  var pickFor = null;
+  picker.addEventListener("change", function () { if (picker.files[0]) setPhoto(pickFor, picker.files[0]); picker.value = ""; });
+  function picEvents() {
+    var box = document.getElementById("items");
+    box.addEventListener("click", function (e) { var p = e.target.closest("[data-pic]"); if (!p) return; pickFor = p.dataset.pic; picker.click(); });
+    box.addEventListener("keydown", function (e) { var p = e.target.closest("[data-pic]"); if (p && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); pickFor = p.dataset.pic; picker.click(); } });
+    box.addEventListener("dragover", function (e) { var p = e.target.closest("[data-pic]"); if (p) { e.preventDefault(); p.classList.add("over"); } });
+    box.addEventListener("dragleave", function (e) { var p = e.target.closest("[data-pic]"); if (p) p.classList.remove("over"); });
+    box.addEventListener("drop", function (e) { var p = e.target.closest("[data-pic]"); if (!p) return; e.preventDefault(); p.classList.remove("over"); var f = e.dataTransfer.files[0]; if (f) setPhoto(p.dataset.pic, f); });
+    document.addEventListener("paste", function (e) {
+      var p = document.activeElement && document.activeElement.closest && document.activeElement.closest("[data-pic]");
+      var hover = document.querySelector("[data-pic]:hover");
+      var target = p || hover; if (!target) return;
+      var items = (e.clipboardData && e.clipboardData.files) || [];
+      if (items[0]) { e.preventDefault(); setPhoto(target.dataset.pic, items[0]); }
+    });
+  }
+
+  window.addEventListener("message", function (e) {
+    if (e.data && e.data.gageExport) {
+      var src = e.source, seen = {}, urls = [];
+      state.lists.forEach(function (l) { l.items.forEach(function (x) { if (x.image && /^\/_blob\//.test(x.image) && !seen[x.image]) { seen[x.image] = 1; urls.push(x.image); } }); });
+      var out = {}, i = 0;
+      function shrink(u) {
+        return fetch(u).then(function (r) { return r.blob(); }).then(function (b) { return createImageBitmap(b); }).then(function (bm) {
+          var k = Math.min(1, 300 / Math.max(bm.width, bm.height)), c = document.createElement("canvas");
+          c.width = Math.round(bm.width * k); c.height = Math.round(bm.height * k);
+          var g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(bm, 0, 0, c.width, c.height);
+          out[u] = c.toDataURL("image/jpeg", 0.8);
+        }).catch(function () {});
+      }
+      function next() { if (i >= urls.length) { src.postMessage({ gageExportDone: true, key: state.key, state: state, images: out }, "*"); return; } shrink(urls[i++]).then(next); }
+      next();
+      return;
+    }
+    if (!dev || !assets || !e.data || typeof e.data.gagePhotos !== "object" || document.getElementById("imsg")) return;
+    importPhotos(); window.postMessage(e.data, "*");
+  });
+  shell();
+  document.body.appendChild(picker);
+  picEvents();
+  render();
+  status(state.savedAt ? "" : "");
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("artifact").then(function (a) { if (a) { art = a; shared = true; if (pendingMerge) { pendingMerge = false; save(); } } }).catch(function () {});
+    window.claude.use("assets").then(function (a) { assets = a || null; if (assets) { document.getElementById("importbtn").hidden = false; render(); } }).catch(function () {});
+  }
+})();
+</script></body></html>
